@@ -19,8 +19,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/alexbathome/noters/internal/store"
-	"github.com/alexbathome/noters/internal/web"
+	"github.com/alexbathome/noter/internal/store"
+	"github.com/alexbathome/noter/internal/web"
 )
 
 // The same static UI GitHub Pages serves, embedded so the binary works offline.

@@ -14,7 +14,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/alexbathome/noters/internal/store"
+	"github.com/alexbathome/noter/internal/store"
 	datastar "github.com/starfederation/datastar-go/datastar"
 )
 
