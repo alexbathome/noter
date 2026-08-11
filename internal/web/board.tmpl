@@ -1,0 +1,17 @@
+{{- /* The whole board, patched into #zones over SSE on every change. */ -}}
+<div id="zones">
+  {{- range .Zones}}
+  <div class="zone" id="{{.Name}}">
+    <header>{{.Name}}<button title="New task" data-on:click="@post('{{$.Base}}/api/tasks?zone={{.Name}}')">+</button></header>
+    <div class="list" data-zone="{{.Name}}"
+         data-on:dblclick="evt.target === el &amp;&amp; @post('{{$.Base}}/api/tasks?zone={{.Name}}')">
+      {{- range .Tasks}}
+      <div class="task{{if not .Title}} empty{{end}}" id="task-{{.ID}}" draggable="true" data-id="{{.ID}}"
+           data-class:selected="$sel === '{{.ID}}'"
+           data-on:click="$sel = '{{.ID}}'; @get('{{$.Base}}/api/tasks/{{.ID}}')"
+        >{{if .Title}}{{.Title}}{{else}}Untitled{{end}}</div>
+      {{- end}}
+    </div>
+  </div>
+  {{- end}}
+</div>

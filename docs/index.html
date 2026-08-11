@@ -1,0 +1,303 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Noter</title>
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+        @font-face {
+            font-family: 'SpaceMono';
+            src: url('fonts/SpaceMonoNerdFont-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'SpaceMono';
+            src: url('fonts/SpaceMonoNerdFont-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'SpaceMono';
+            src: url('fonts/SpaceMonoNerdFont-Italic.ttf') format('truetype');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'SpaceMono';
+            src: url('fonts/SpaceMonoNerdFont-BoldItalic.ttf') format('truetype');
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        :root {
+            --bg: #fff;
+            --bg-alt: #f5f5f5;
+            --bg-selected: #f0f0f0;
+            --border: #ddd;
+            --text: #333;
+            --text-dim: #666;
+            --text-faint: #999;
+            --text-disabled: #bbb;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1e1e1e;
+                --bg-alt: #2a2a2a;
+                --bg-selected: #333;
+                --border: #3c3c3c;
+                --text: #d4d4d4;
+                --text-dim: #999;
+                --text-faint: #6e6e6e;
+                --text-disabled: #555;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body>div {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr);
+            height: 100%;
+            font: 14px 'SpaceMono', monospace;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        #zones {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 1px;
+            background: var(--border);
+            min-height: 0;
+            min-width: 0;
+        }
+
+        .zone {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+            padding: 0.1rem;
+            min-height: 0;
+            min-width: 0;
+        }
+
+        .zone>header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: .5rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            font-size: .75rem;
+            color: var(--text-dim);
+        }
+
+        .zone>header>button {
+            border: 0;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            color: var(--text-dim);
+        }
+
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: .25rem;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+
+        .list> :first-child {
+            margin-top: auto;
+        }
+
+        .list.over {
+            background: var(--bg-alt);
+        }
+
+        .task {
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: .1rem .5rem;
+            background: var(--bg);
+            cursor: grab;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .task.selected {
+            border-color: var(--text-dim);
+            background: var(--bg-selected);
+        }
+
+        .task.empty {
+            color: var(--text-faint);
+        }
+
+        .task.dragging {
+            opacity: .4;
+        }
+
+        #pane {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            border-left: 1px solid var(--border);
+        }
+
+        #toolbar {
+            display: flex;
+            justify-content: flex-end;
+            padding: .5rem .1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #toolbar>button {
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            background: var(--bg);
+            padding: .1rem .1rem;
+            cursor: pointer;
+            font: inherit;
+            font-size: .8rem;
+            color: var(--text);
+        }
+
+        #toolbar>button:disabled {
+            color: var(--text-disabled);
+            cursor: default;
+        }
+
+        #editor {
+            flex: 1;
+            min-height: 0;
+        }
+
+        #status {
+            display: flex;
+            gap: .5rem;
+            padding: .25rem .5rem;
+            border-top: 1px solid var(--border);
+            font-size: .75rem;
+            color: var(--text-dim);
+            white-space: pre;
+        }
+
+        #status input {
+            flex: 1;
+            font: inherit;
+            background: none;
+            border: 0;
+            outline: none;
+            color: var(--text);
+        }
+
+        /* --- shell states: the app is hidden until noters answers on loopback --- */
+        #app[hidden],
+        #offline[hidden] {
+            display: none;
+        }
+
+        #offline {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 2rem;
+            font: 14px 'SpaceMono', monospace;
+            color: var(--text);
+            background: var(--bg);
+            text-align: center;
+        }
+
+        #offline h1 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--text-dim);
+        }
+
+        #offline p {
+            margin: 0;
+            color: var(--text-dim);
+            max-width: 46rem;
+        }
+
+        #offline code {
+            display: block;
+            padding: .75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            background: var(--bg-alt);
+            color: var(--text);
+            font: inherit;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        #offline .hint {
+            font-size: .75rem;
+            color: var(--text-faint);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Shown only once the local noters server answers on loopback. -->
+    <div id="app" hidden data-signals="{sel: ''}">
+        <!-- Replaced wholesale by the server over SSE; empty until then. The
+             data-* endpoints are filled in by app.js once the port is known. -->
+        <div id="zones"></div>
+        <div id="pane">
+            <div id="toolbar">
+                <button id="delete" data-attr:disabled="$sel === ''">Delete task</button>
+            </div>
+            <div id="editor"></div>
+            <div id="status"></div>
+        </div>
+    </div>
+
+    <!-- Fallback when nothing is listening on 11911. -->
+    <div id="offline">
+        <h1>noters not detected</h1>
+        <p>please run</p>
+        <code>go run github.com/alexbathome/noters@latest web</code>
+        <p>and refresh</p>
+        <p class="hint">
+            Safari blocks pages served over HTTPS from talking to http://localhost, so this page
+            cannot reach noters there. Once the command above is running, open
+            <a href="http://localhost:11911/">http://localhost:11911/</a> directly instead.
+        </p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
