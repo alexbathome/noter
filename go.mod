@@ -1,4 +1,4 @@
-module github.com/alexbathome/noters
+module github.com/alexbathome/noter
 
 go 1.26.3
 
