@@ -1,4 +1,4 @@
-// Command noters runs the local task server behind the noter board.
+// Command noter runs the local task server behind the noter board.
 //
 // The UI is hosted on GitHub Pages and dials this process on loopback; if it
 // is not running, the page shows instructions for starting it.
@@ -32,10 +32,10 @@ const defaultPort = 11911
 
 func main() {
 	log.SetFlags(0)
-	log.SetPrefix("noters: ")
+	log.SetPrefix("noter: ")
 
 	if len(os.Args) < 2 || os.Args[1] != "web" {
-		fmt.Fprintf(os.Stderr, "usage: noters web [--port %d] [--db PATH]\n", defaultPort)
+		fmt.Fprintf(os.Stderr, "usage: noter web [--port %d] [--db PATH]\n", defaultPort)
 		os.Exit(2)
 	}
 
@@ -97,7 +97,7 @@ func run(port int, dbPath string) error {
 func defaultDBPath() string {
 	dir, err := os.UserConfigDir()
 	if err != nil {
-		return "noters.db"
+		return "noter.db"
 	}
-	return filepath.Join(dir, "noters", "noters.db")
+	return filepath.Join(dir, "noter", "noter.db")
 }

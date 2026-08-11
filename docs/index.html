@@ -215,7 +215,7 @@
             color: var(--text);
         }
 
-        /* --- shell states: the app is hidden until noters answers on loopback --- */
+        /* --- shell states: the app is hidden until noter answers on loopback --- */
         #app[hidden],
         #offline[hidden] {
             display: none;
@@ -270,7 +270,7 @@
 </head>
 
 <body>
-    <!-- Shown only once the local noters server answers on loopback. -->
+    <!-- Shown only once the local noter server answers on loopback. -->
     <div id="app" hidden data-signals="{sel: ''}">
         <!-- Replaced wholesale by the server over SSE; empty until then. The
              data-* endpoints are filled in by app.js once the port is known. -->
@@ -292,7 +292,7 @@
         <p>and refresh</p>
         <p class="hint">
             Safari blocks pages served over HTTPS from talking to http://localhost, so this page
-            cannot reach noters there. Once the command above is running, open
+            cannot reach noter there. Once the command above is running, open
             <a href="http://localhost:11911/">http://localhost:11911/</a> directly instead.
         </p>
     </div>

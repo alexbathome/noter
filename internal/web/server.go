@@ -1,4 +1,4 @@
-// Package web serves the noters API over Datastar's SSE hypermedia protocol.
+// Package web serves the noter API over Datastar's SSE hypermedia protocol.
 package web
 
 import (
@@ -45,11 +45,11 @@ func New(s *store.Store, base string, static fs.FS) *Server {
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
 
-	// Liveness probe the GitHub Pages shell uses to decide whether noters is
+	// Liveness probe the GitHub Pages shell uses to decide whether noter is
 	// running before it boots the app.
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		io.WriteString(w, `{"ok":true,"app":"noters"}`)
+		io.WriteString(w, `{"ok":true,"app":"noter"}`)
 	})
 
 	mux.HandleFunc("GET /api/board", s.streamBoard)

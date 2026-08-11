@@ -4,7 +4,7 @@
 // lives on the Go server and arrives as HTML over Datastar's SSE stream. This
 // file is only the parts a hypermedia round-trip genuinely cannot do:
 //
-//   1. probing whether noters is running before booting the app,
+//   1. probing whether noter is running before booting the app,
 //   2. the Monaco editor island (which the server drives via window.noter),
 //   3. HTML5 drag-and-drop, which needs local pointer state mid-gesture.
 
@@ -27,7 +27,7 @@
     fetch(BASE + '/healthz', { mode: 'cors', cache: 'no-store' })
         .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
         .then(function (info) {
-            if (info && info.app === 'noters') { boot(); } else { Promise.reject('unexpected'); }
+            if (info && info.app === 'noter') { boot(); } else { Promise.reject('unexpected'); }
         })
         .catch(function () { /* offline panel is already the default view */ });
 
